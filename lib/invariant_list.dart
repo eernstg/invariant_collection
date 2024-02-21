@@ -65,3 +65,19 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   /// TODO(eernst): Enable this when `IMap` is created.
   // IMap<int, E> asMap() => _it.asMap().iMap;
 }
+
+extension IListExtension<T> on List<T> {
+  IList<T> get iList => IList._(this);
+
+  bool get isInvariant {
+    // We need a fresh list in order to succeed even when `this`
+    // is unmodifiable.
+    var freshList = take(0).toList();
+    try {
+      freshList.addAll(<T>[]);
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
+}
