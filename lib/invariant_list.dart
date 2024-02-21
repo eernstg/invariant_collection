@@ -2,12 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Provide an extension type [IList] as a replacement for the
+/// built-in class [List] as a type, with better type safety.
+library;
+
 // See https://github.com/dart-lang/sdk/issues/54543:
 // ignore_for_file: unused_element
 
 typedef _Inv<X> = X Function(X);
+
+/// A replacement for the built-in class [List] that offers improved
+/// type safety because it is invariant in its type parameter.
 typedef IList<E> = _IList<E, _Inv<E>>;
 
+/// The underlying type that allows [IList] to be invariant.
 extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
     implements List<E> {
   /// Create an [IList] by forwarding to [List.filled].
@@ -66,9 +74,17 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   // IMap<int, E> asMap() => _it.asMap().iMap;
 }
 
+/// Extension methods used with regular [List] objects
+/// in order to concisely obtain an expression of type [IList],
+/// and in order to validate the invariance.
 extension IListExtension<T> on List<T> {
+  /// Return the receiver with type [IList].
   IList<T> get iList => IList._(this);
 
+  /// Return true if and only if this [List] has a run-time type that
+  /// implements `List<T>`.  Another way to say the same thing (slightly
+  /// less precisely) is that the type argument of this [List] is exactly
+  /// `T`, not a proper subtype of `T`.
   bool get isInvariant {
     // We need a fresh list in order to succeed even when `this`
     // is unmodifiable.
