@@ -2,6 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// See https://github.com/dart-lang/sdk/issues/54543:
+// ignore_for_file: unused_element
+
 typedef _Inv<X> = X Function(X);
 typedef IList<E> = _IList<E, _Inv<E>>;
 
@@ -9,25 +12,26 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
     implements List<E> {
   /// Create an [IList] by forwarding to [List.filled].
   _IList.filled(int length, E fill, {bool growable = false})
-      : this(List.filled(length, fill, growable: growable));
+      : this._(List.filled(length, fill, growable: growable));
 
   /// Create an [IList] by forwarding to [List.empty].
-  _IList.empty({bool growable = false}) : this(List.empty(growable: growable));
+  _IList.empty({bool growable = false})
+      : this._(List.empty(growable: growable));
 
   /// Create an [IList] by forwarding to [List.from].
   _IList.from(Iterable elements, {bool growable = true})
-      : this(List.from(elements, growable: growable));
+      : this._(List.from(elements, growable: growable));
 
   /// Create an [IList] by forwarding to [List.of].
   _IList.of(Iterable<E> elements, {bool growable = true})
-      : this(List.of(elements, growable: growable));
+      : this._(List.of(elements, growable: growable));
 
   /// Create an [IList] by forwarding to [List.generate].
   _IList.generate(int length, E generator(int index), {bool growable = true})
-      : this(List.generate(length, generator, growable: growable));
+      : this._(List.generate(length, generator, growable: growable));
 
   /// Create an [IList] by forwarding to [List.unmodifiable].
-  _IList.unmodifiable(Iterable elements) : this(List.unmodifiable(elements));
+  _IList.unmodifiable(Iterable elements) : this._(List.unmodifiable(elements));
 
   /// Forward to [List.castFrom] and return the corresponding [IList].
   static IList<T> castFrom<S, T>(List<S> source) =>
@@ -43,7 +47,7 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
       List.writeIterable(target, at, source);
 
   /// Forward to [List.cast] and return the corresponding [IList].
-  IList<R> cast<R>() => IList<R>(_it.cast());
+  IList<R> cast<R>() => IList._(_it.cast<R>());
 
   /// TODO(eernst): Implement this when `IIterable` is created.
   // IIterable<E> get reversed => _it.reversed.iIterable;
