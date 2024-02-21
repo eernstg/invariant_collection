@@ -1,0 +1,13 @@
+name: invariant_collection
+description: >-
+  Invariant versions of standard collection types using extension types.
+  As of version 1.0.0, the only kind which is implemented is `List`.
+version: 1.0.0
+repository: https://github.com/eernstg/invariant_collection
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.21.0
