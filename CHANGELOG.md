@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Extended README.md further.
+
 ## 1.0.2
 
 - Extended README.md substantially.
