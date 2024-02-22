@@ -7,7 +7,7 @@ similar libraries for other kinds of collections from 'dart:core'.
 `invariant_list.dart` provides an extension type `IList<E>` which is
 intended to be used as a replacement for types of the form `List<E>`
 (where `List` is the built-in class of that name). An easy way to obtain an
-expression `e` of type `IList<T>` from an expression of type `List<T>` for
+expression of type `IList<T>` from an expression `e` of type `List<T>` for
 some `T` is to use `e.iList`.
 
 `IList<E>` differs from `List<E>` in that the former is invariant in its
