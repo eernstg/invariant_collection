@@ -27,7 +27,7 @@ void main() {
 
 The corresponding example using the type `IList` differs by having a
 compile-time error (which means that there will not be any run-time errors
-because the unsafe kind of subtyping is prevented at compile tim):
+because the unsafe kind of subtyping is prevented at compile time):
 
 ```dart
 void main() {
