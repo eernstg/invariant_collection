@@ -147,6 +147,11 @@ It is possible to perform a from-scratch check by means of
 `isInvariant`. Another way to establish a safe initial state is to use an
 `IList` constructor, e.g., `IList<num>.filled(10, 0.1)`.
 
+Now let's assume that we have established the desired invariance property
+initially. Subsequent steps may then be statically known to preserve the
+proporty, or they might be unsafe, and we can deal with that just like
+'evenness':
+
 ```dart
 import 'package:invariant_collection/invariant_list.dart';
 
@@ -172,15 +177,19 @@ Again, if `a` is an instance of `B` then the invariance property is
 violated at `xs = a.next(xs)`, and it takes a from-scratch check
 (`isInvariant`) to determine whether or not we still have it.
 
-The design of `invariant_collections` relies on this kind of property
-support: Based on an analysis that occurs entirely at compile-time (hence:
-whose cost at run time is zero), it is ensured that the invariance property
-is _preserved_ at each step. Some steps are inherently capable of violating
-the invariance property (in particular: type casts, and the initial
-creation of an `IList` from an object whose static type is already
-covariant). Because of these inherently unsafe steps, it may be necessary
-to perform a from-scratch check (`isInvariant`) at certain points in the
-code.
+An important special case arises when the invariant is never in doubt: If
+the initial state is correct (say, a variable `IList<T> x` satisfies the
+invariance requirement), and no changes are made to the identity of the
+object (say, it's a `final` variable), then the invariance requirement is
+trivial guaranteed to hold at all times. Similarly if a variable is only
+assigned from sources that are known to satisfy the requirement. And so on.
+
+The point is that preservation of invariance is ensured for most
+computational steps, at a zero cost at run time, but it is necessary to
+keep an eye on certain steps that are unsafe. The underlying assumption for
+`invariant_collections` is that this is a worthwhile improvement over the
+situation where every collection can be covariantly typed in all
+situations.
 
 ## Migration
 
