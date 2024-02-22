@@ -85,7 +85,7 @@ void main() {
   A a = ...;
   x += 14; // Preserves evenness.
   x = a.next(x); // OK?
-  x -= 14; // Preserves evenness.
+  x -= 14; // Preserves evenness (if we still have it).
   if (!x.isEven) throw StateError("x is not even!");
 }
 ```
@@ -147,7 +147,6 @@ It is possible to perform a from-scratch check by means of
 `isInvariant`. Another way to establish a safe initial state is to use an
 `IList` constructor, e.g., `IList<num>.filled(10, 0.1)`.
 
-
 ```dart
 import 'package:invariant_collection/invariant_list.dart';
 
@@ -160,12 +159,48 @@ class B implements A {
 }
 
 void main() {
-  var xs = <num>[1, 2, 3].iList; // Invariant at first.
+  var xs = <num>[1, 2, 3.5].iList; // Invariant at first.
   A a = ...;
   xs.add(14); // Same `xs`, preserves invariance.
   xs = a.next(xs); // OK?
-  xs.remove(14); // Same `xs`, preserves invariance.
-  if (!x.isInvariant) throw StateError("xs is not invariant!");
+  xs.remove(14); // Same `xs`, preserves invariance (if we have it).
+  if (!xs.isInvariant) throw StateError("xs is not invariant!");
 }
 ```
 
+Again, if `a` is an instance of `B` then the invariance property is
+violated at `xs = a.next(xs)`, and it takes a from-scratch check
+(`isInvariant`) to determine whether or not we still have it.
+
+The design of `invariant_collections` relies on this kind of property
+support: Based on an analysis that occurs entirely at compile-time (hence:
+whose cost at run time is zero), it is ensured that the invariance property
+is _preserved_ at each step. Some steps are inherently capable of violating
+the invariance property (in particular: type casts, and the initial
+creation of an `IList` from an object whose static type is already
+covariant). Because of these inherently unsafe steps, it may be necessary
+to perform a from-scratch check (`isInvariant`) at certain points in the
+code.
+
+## Migration
+
+Note that `IList<T>` is a subtype of `List<T>` for all `T`. This means that
+a given library _L_ can be modified to use `IList<T>` rather than `List<T>`
+as return types (especially, for lists that are subject to mutation), and
+interal computations (local variables, private methods) can use `IList<T>`
+rather than `List<T>` (again, especially for lists that are mutated). In
+code that interacts with other libraries, an `IList<T>` can be passed when
+a `List<S>` is expected whenever `T` is a subtype of `S`. This could occur,
+say, because the callee hasn't been updated yet, or because they don't plan
+to mutate that list. Next, an `IList<T>` can also be passed to other
+libraries when an `IList<T>` is expected (note the improved type safety in
+the case where multiple libraries will mutate the list).
+
+If a `List<T>` is available in _L_, and it should be passed as an actual
+argument to a method in some other library which is expecting an
+`IList<T>`, then we will get a compile-time error (`List<T>` is not
+assignable to `IList<T>`), and it is then known that this particular
+invocation may need a from-scratch check. This means that we have changed
+an unsafe situation to a situation where a run-time check is performed
+before the actual run-time failure occurs (if any), and the situation could
+even be made statically safe with some more work.
