@@ -1,8 +1,11 @@
+## 1.0.6
+
+- Add library `invariant_collection.dart`, exporting `invariant_list.dart`.
+  This library will export all the other libraries in this package.
+
 ## 1.0.5
 
 - Update README.md text about the assertion.
-- Add library `invariant_collection.dart`, exporting `invariant_list.dart`.
-  This library will export all the other libraries in this package.
 
 ## 1.0.4
 
