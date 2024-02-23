@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Update README.md text about the assertion.
+
 ## 1.0.4
 
 - Extended and improved README.md.
