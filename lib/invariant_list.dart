@@ -18,6 +18,9 @@ typedef IList<E> = _IList<E, _Inv<E>>;
 /// The underlying type that allows [IList] to be invariant.
 extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
     implements List<E> {
+  /// Create an [IList] from an existing [List], and assert invariance.
+  _IList(this._it) : assert(_it.isInvariant, "Covariance detected!");
+
   /// Create an [IList] by forwarding to [List.filled].
   _IList.filled(int length, E fill, {bool growable = false})
       : this._(List.filled(length, fill, growable: growable));

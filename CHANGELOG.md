@@ -1,3 +1,9 @@
+## 1.0.4
+
+- Extended and improved README.md.
+- Added `IList` constructor that asserts `isInvariant`, to enable a safe way
+  (when assertions are enabled) to obtain an `IList` from a given `List`.
+
 ## 1.0.3
 
 - Extended README.md further.
