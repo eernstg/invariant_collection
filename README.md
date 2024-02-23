@@ -69,20 +69,24 @@ document is not the place to unfold all the details.
 
 ## Preserving a property, not necessarily checking it at each step
 
-Let's pretend that `x` should be an even number at all times.
+Let's pretend that `x` should be an even number at all times. Here's a
+snippet of code where we can think about this claim and consider whether
+it's maintained or violated, and where.
 
 ```dart
 class A {
   int next(int i) => i * 2; // Ensure evenness.
 }
 
+// This class could be declared in some other library, 
+// we may not know that it exists.
 class B implements A {
-  int next(int i) => 13;
+  int next(int i) => 13; // Destroys evenness!
 }
 
 void main() {
   var x = 2; // True at first.
-  A a = ...;
+  A a = ...; // Some complex expression.
   x += 14; // Preserves evenness.
   x = a.next(x); // OK?
   x -= 14; // Preserves evenness (if we still have it).
@@ -95,6 +99,9 @@ Just like a proof by induction, we can check that the initial state
 requirement. Also, an inspection of `A.next(_)` confirms that `x` remains
 even, which is also true for `x += 14` and `x -= 14`.
 
+Hence, a (superficial) static analysis seems to confirm that the evenness
+property is preserved all the way.
+
 However, if the value of `a` is actually an instance of `B` then
 `a.next(x)` will return a value which isn't even, and then we may stay off
 track (such that the evenness requirement is violated) for any number of
@@ -105,12 +112,13 @@ evenness requirement is satisfied (`isEven`), and otherwise take some
 recovery or panic steps in response to that failure, e.g., throwing a state
 error.
 
-The point is that we can ensure that a property holds if each step that we
-may execute is guaranteed to preserve that property.
+The point is that we can ensure that a property holds if it holds "at the
+beginning", and each step that we may execute is guaranteed to preserve
+that property.
 
 If some steps are not guaranteed to preserve the property then we can still
 ensure that the property holds by checking the property from scratch after
-each unsafe step. Assuming that `isOdd` could be a really expensive
+each unsafe step. Assuming that `isEven` could be a really expensive
 computation, we'd very much like to perform these checks only when
 necessary; we might even tolerate that the property is violated for some
 limited number of steps (so we check after `x -= 14` even though that's a
@@ -123,13 +131,17 @@ will preserve the evenness of `x`, and the cost associated with this
 knowledge is zero at run time.
 
 The structure of the guarantees provided by invariant collection types like
-`IList` is very similar.
+`IList` is very similar. It's all about proving at compile time that the
+invariance property is preserved, for all operations that are checked
+statically. Some steps are dynamic (e.g., type casts), and they must be
+followed up by a from-scratch check (`isInvariant`).
 
-First consider the initial state. There's no way we can prevent at compile
-time that an expression with static type `List<num>` has run-time type
-`List<int>`, that's just a property of the Dart `List` class, and we can't
-change that. Also, it is not possible to _detect_ this situation at compile
-time, due to the underlying undecidability. 
+Here's how it plays out in practice. First consider the initial state.
+There's no way we can prevent at compile time that an expression with
+static type `List<num>` has run-time type `List<int>`, that's just a
+property of the Dart `List` class, and we can't change that. Also, it is
+not possible to _detect_ this situation at compile time, due to the
+underlying undecidability.
 
 This means that it is always possible to create an `IList<num>` whose
 actual type argument is not `num` but some subtype of `num`, even though
@@ -149,7 +161,7 @@ It is possible to perform a from-scratch check by means of
 
 Now let's assume that we have established the desired invariance property
 initially. Subsequent steps may then be statically known to preserve the
-proporty, or they might be unsafe, and we can deal with that just like
+property, or they might be unsafe, and we can deal with that just like
 'evenness':
 
 ```dart
@@ -165,7 +177,7 @@ class B implements A {
 
 void main() {
   var xs = <num>[1, 2, 3.5].iList; // Invariant at first.
-  A a = ...;
+  A a = ...; // Some complex expression.
   xs.add(14); // Same `xs`, preserves invariance.
   xs = a.next(xs); // OK?
   xs.remove(14); // Same `xs`, preserves invariance (if we have it).
@@ -181,7 +193,7 @@ An important special case arises when the invariant is never in doubt: If
 the initial state is correct (say, a variable `IList<T> x` satisfies the
 invariance requirement), and no changes are made to the identity of the
 object (say, it's a `final` variable), then the invariance requirement is
-trivial guaranteed to hold at all times. Similarly if a variable is only
+trivially guaranteed to hold at all times. Similarly if a variable is only
 assigned from sources that are known to satisfy the requirement. And so on.
 
 The point is that preservation of invariance is ensured for most
@@ -195,21 +207,23 @@ situations.
 
 Note that `IList<T>` is a subtype of `List<T>` for all `T`. This means that
 a given library _L_ can be modified to use `IList<T>` rather than `List<T>`
-as return types (especially, for lists that are subject to mutation), and
-interal computations (local variables, private methods) can use `IList<T>`
-rather than `List<T>` (again, especially for lists that are mutated). In
-code that interacts with other libraries, an `IList<T>` can be passed when
-a `List<S>` is expected whenever `T` is a subtype of `S`. This could occur,
-say, because the callee hasn't been updated yet, or because they don't plan
-to mutate that list. Next, an `IList<T>` can also be passed to other
-libraries when an `IList<T>` is expected (note the improved type safety in
-the case where multiple libraries will mutate the list).
+as return types (especially, for lists that are subject to mutation).
+Internal computations (using local variables, private methods) can use
+`IList<T>` rather than `List<T>` everywhere (again, especially for lists
+that are mutated). In code that interacts with other libraries, an
+`IList<T>` can be passed when a `List<S>` is expected whenever `T` is a
+subtype of `S`. This could occur, say, because the callee hasn't been
+updated yet, or because they don't plan to mutate that list. Next, an
+`IList<T>` can of course also be passed to other libraries when an
+`IList<T>` is expected, which would be the case when multiple libraries
+have switched to use `invariant_collection` (and they are now helping each
+other to preserve the invariance property for lists that need it).
 
 If a `List<T>` is available in _L_, and it should be passed as an actual
 argument to a method in some other library which is expecting an
 `IList<T>`, then we will get a compile-time error (`List<T>` is not
-assignable to `IList<T>`), and it is then known that this particular
-invocation may need a from-scratch check. This means that we have changed
-an unsafe situation to a situation where a run-time check is performed
-before the actual run-time failure occurs (if any), and the situation could
-even be made statically safe with some more work.
+assignable to `IList<T>`). This is a _good_ kind of breakage because it
+most likely indicates that this other library intends to mutate the list,
+and hence they need to receive the list with a static type which is
+invariant. We may then check that the given list is indeed invariant, and
+give it the type `IList<T>`, and pass it&mdash;safely.
