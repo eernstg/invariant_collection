@@ -150,7 +150,7 @@ the static types imply that no such covariance exists.
 ```dart
 void main() {
   List<num> xs = <int>[1]; // We can't turn this into an error.
-  IList<num> ys = IList<num>(xs); // Statically OK.
+  var ys = IList<num>(xs); // Statically OK.
   print(ys.isInvariant); // 'false'!
 }
 ```
@@ -158,6 +158,9 @@ void main() {
 It is possible to perform a from-scratch check by means of
 `isInvariant`. Another way to establish a safe initial state is to use an
 `IList` constructor, e.g., `IList<num>.filled(10, 0.1)`.
+
+Note that the `IList` constructor will throw if assertions are enabled,
+because it asserts that the given list `isInvariant`.
 
 Now let's assume that we have established the desired invariance property
 initially. Subsequent steps may then be statically known to preserve the
