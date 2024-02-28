@@ -1,3 +1,7 @@
+## 1.0.9
+
+- Improve README.md.
+
 ## 1.0.8
 
 - Reorganize libraries in order to enable `implements` of private types.
