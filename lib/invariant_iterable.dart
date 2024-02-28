@@ -21,21 +21,21 @@ typedef IIterable<E> = _IIterable<E, _Inv<E>>;
 /// The underlying type that allows [IIterable] to be invariant.
 extension type _IIterable<E, Invariance extends _Inv<E>>._(Iterable<E> _it)
     implements Iterable<E> {
-  const IIterable() : this._(const Iterable());
+  const _IIterable() : this._(const Iterable());
 
   /// Create an [IIterable] by forwarding to [Iterable.generate].
-  IIterable.generate(int count, [E generator(int index)?])
+  _IIterable.generate(int count, [E generator(int index)?])
       : this._(Iterable.generate(count, generator));
 
   /// Create an [IIterable] by forwarding to [Iterable.empty].
   ///
   /// Note that the representation object has type argument `Never`, which
   /// is necessary because `Iterable<E>.empty()` is not constant.
-  const IIterable.empty() : IIterable._(const Iterable<Never>.empty());
+  const _IIterable.empty() : this._(const Iterable<Never>.empty());
 
   /// Create an [IIterable] by forwarding to [Iterable.castFrom].
   static IIterable<T> castFrom<S, T>(Iterable<S> source) =>
-      IIterable._(Iterable.castFrom<S, T>(source));
+      _IIterable._(Iterable.castFrom<S, T>(source));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.cast].
   IIterable<R> cast<R>() => IIterable._(_it.cast<R>());
@@ -55,7 +55,7 @@ extension type _IIterable<E, Invariance extends _Inv<E>>._(Iterable<E> _it)
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.expand].
   IIterable<T> expand<T>(Iterable<T> toElements(E element)) =>
-    IIterable._(_it.expand<T>(toElements));
+      IIterable._(_it.expand<T>(toElements));
 
   /// Return an [IList] obtained by forwarding to [Iterable.toList].
   IList<E> toList({bool growable = true}) => _it.toList().iList;
@@ -79,12 +79,12 @@ extension type _IIterable<E, Invariance extends _Inv<E>>._(Iterable<E> _it)
 
   /// Forward to [Iterable.iterableToShortString].
   static String iterableToShortString(Iterable iterable,
-      [String leftDelimiter = '(', String rightDelimiter = ')']) =>
+          [String leftDelimiter = '(', String rightDelimiter = ')']) =>
       Iterable.iterableToShortString(iterable, leftDelimiter, rightDelimiter);
 
   /// Forward to [Iterable.toFullString].
   static String iterableToFullString(Iterable iterable,
-      [String leftDelimiter = '(', String rightDelimiter = ')'])
+          [String leftDelimiter = '(', String rightDelimiter = ')']) =>
       Iterable.iterableToFullString(iterable, leftDelimiter, rightDelimiter);
 }
 
