@@ -1,3 +1,9 @@
+## 1.0.8
+
+- Reorganize libraries in order to enable `implements` of private types.
+  This is needed in order to make `IList<T>` assignable to `IIterable<T>`,
+  and similarly for other collection types.
+
 ## 1.0.7
 
 - Add library `invariant_iterable.dart`, providing the extension type
