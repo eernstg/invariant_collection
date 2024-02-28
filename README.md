@@ -1,8 +1,8 @@
 # Invariant Collections
 
 The repository `invariant_collection` provides the libraries
-`invariant_iterable.dart`, `invariant_list.dart`, and
-`invariant_collection.dart` (exporting all the others).
+`invariant_iterable.dart`, `invariant_list.dart`, `invariant_set.dart`, 
+and `invariant_collection.dart` (exporting all the others).
 Future versions of this repository will provide similar libraries
 for other kinds of collections from 'dart:core'.
 
@@ -197,6 +197,21 @@ void main() {
 Again, if `a` is an instance of `B` then the invariance property is
 violated at `xs = a.next(xs)`, and it takes a from-scratch check
 (`isInvariant`) to determine whether or not we still have it.
+
+Well, the invariant is actually violated in the body of `B.next`, because
+we're using `iList` on an object whose static type is `List<num>`, whereas
+the run-time type has the type argument `int`. So we're again checking a
+few steps after the problem actually arises, which is enough as long as we
+don't forget to perform the check entirely. Of course, `B.next` is a bug,
+and it should be fixed.
+
+The step where an `IList<T>` is assigned to a variable of type `IList<T>`
+or `IIterable<T>` is safe (it preserves the invariance). This includes the
+step where an `IList<num>` is returned from `B.next`, and the value
+returned by `a.next(xs)` in `main` is assigned to `xs`. However, this
+_preserves_ the invariance, but doesn't check the invariance from scratch,
+and this means that we need to verify the invariance after the unsafe step
+in the body.
 
 An important special case arises when the invariant is never in doubt: If
 the initial state is correct (say, a variable `IList<T> x` satisfies the
