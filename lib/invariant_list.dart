@@ -6,6 +6,8 @@
 /// built-in class [List] as a type, with better type safety.
 library;
 
+import 'invariant_iterable.dart';
+
 // See https://github.com/dart-lang/sdk/issues/54543:
 // ignore_for_file: unused_element
 

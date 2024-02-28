@@ -6,6 +6,8 @@
 /// built-in class [Iterable] as a type, with better type safety.
 library;
 
+import 'invariant_list.dart';
+
 // See https://github.com/dart-lang/sdk/issues/54543:
 // ignore_for_file: unused_element
 
@@ -19,8 +21,8 @@ typedef _Inv<X> = X Function(X);
 typedef IIterable<E> = _IIterable<E, _Inv<E>>;
 
 /// The underlying type that allows [IIterable] to be invariant.
-extension type _IIterable<E, Invariance extends _Inv<E>>._(Iterable<E> _it)
-    implements Iterable<E> {
+extension type const _IIterable<E, Invariance extends _Inv<E>>._(
+    Iterable<E> _it) implements Iterable<E> {
   const _IIterable() : this._(const Iterable());
 
   /// Create an [IIterable] by forwarding to [Iterable.generate].
