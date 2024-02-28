@@ -1,3 +1,8 @@
+## 1.0.7
+
+- Add library `invariant_iterable.dart`, providing the extension type
+  `IIterable`. Add members of `IList` where this type is used.
+
 ## 1.0.6
 
 - Add library `invariant_collection.dart`, exporting `invariant_list.dart`.
