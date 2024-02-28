@@ -5,4 +5,5 @@
 /// A library that exports all invariant collections.
 library;
 
+export 'invariant_iterable.dart';
 export 'invariant_list.dart';
