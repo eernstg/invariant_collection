@@ -1,8 +1,10 @@
 # Invariant Collections
 
-The repository `invariant_collection` provides the library
-`invariant_list.dart`. Future versions of this repository will provide
-similar libraries for other kinds of collections from 'dart:core'.
+The repository `invariant_collection` provides the libraries
+`invariant_iterable.dart`, `invariant_list.dart`, and
+`invariant_collection.dart` (exporting all the others).
+Future versions of this repository will provide similar libraries
+for other kinds of collections from 'dart:core'.
 
 `invariant_list.dart` provides an extension type `IList<E>` which is
 intended to be used as a replacement for types of the form `List<E>` (where
@@ -10,6 +12,10 @@ intended to be used as a replacement for types of the form `List<E>` (where
 type parameter, whereas `List<E>` uses dynamically checked covariance. An
 easy way to obtain an expression of type `IList<T>` from an expression `e`
 of type `List<T>` is to use `e.iList`.
+
+All other kinds of collections in this package are similar. They use the
+same naming scheme and provide the same kind of typing and semantic
+properties.
 
 ## Motivation: Type safety
 
