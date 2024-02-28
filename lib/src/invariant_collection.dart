@@ -178,7 +178,7 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   IIterable<T> expand<T>(Iterable<T> toElements(E element)) =>
       IIterable._(_it.expand<T>(toElements));
 
-    IIterable<E> followedBy(Iterable<E> other) =>
+  IIterable<E> followedBy(Iterable<E> other) =>
       IIterable._(_it.followedBy(other));
 
   IIterable<T> map<T>(T toElement(E e)) => IIterable._(_it.map<T>(toElement));
@@ -229,8 +229,8 @@ extension IListExtension<T> on List<T> {
 typedef ISet<E> = _ISet<E, _Inv<E>>;
 
 /// The underlying type that allows [ISet] to be invariant.
-extension type const _ISet<E, Invariance extends _Inv<E>>._(
-    Set<E> _it) implements Set<E>, _IIterable<E, Invariance> {
+extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
+    implements Set<E>, _IIterable<E, Invariance> {
   /// Create an [ISet] by forwarding to [Set].
   _ISet() : this._(<E>{});
 
@@ -248,12 +248,12 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(
       : this._(Set<E>.unmodifiable(elements));
 
   /// Return an [ISet] obtained by forwarding to [Set.castFrom].
-  static ISet<T> castFrom<S, T>(Set<S> source, {Set<R> Function<R>()? newSet}) =>
+  static ISet<T> castFrom<S, T>(Set<S> source,
+          {Set<R> Function<R>()? newSet}) =>
       ISet._(Set.castFrom<S, T>(source, newSet: newSet));
 
   /// Return an [ISet] obtained by forwarding to [Set.cast].
   ISet<R> cast<R>() => ISet._(_it.cast<R>());
-
 
   /// Removes [value] from the set by forwarding to [Set.remove].
   ///
@@ -274,8 +274,7 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(
   E? lookup(E e) => _it.lookup(e);
 
   /// Return an [ISet] by forwarding to [Set.intersection].
-  ISet<E> intersection(Set<Object?> other) =>
-      ISet._(_it.intersection(other));
+  ISet<E> intersection(Set<Object?> other) => ISet._(_it.intersection(other));
 
   /// Return an [ISet] by forwarding to [Set.union].
   ISet<E> union(Set<E> other) => ISet._(_it.union(other));
