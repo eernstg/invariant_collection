@@ -6,6 +6,8 @@
 /// classes as types, with better type safety.
 library;
 
+import 'package:meta/meta.dart';
+
 // See https://github.com/dart-lang/sdk/issues/54543:
 // ignore_for_file: unused_element
 
@@ -219,6 +221,9 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
 
   @redeclare
   IList<E> toList({bool growable = true}) => _it.toList().iList;
+
+  @redeclare
+  ISet<E> toSet() => _ISet._(_it.toSet());
 
   @redeclare
   IIterable<E> where(bool test(E element)) => IIterable._(_it.where(test));
