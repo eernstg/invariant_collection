@@ -23,8 +23,6 @@ typedef IIterable<E> = _IIterable<E, _Inv<E>>;
 /// The underlying type that allows [IIterable] to be invariant.
 extension type const _IIterable<E, Invariance extends _Inv<E>>._(
     Iterable<E> _it) implements Iterable<E> {
-  const _IIterable() : this._(const Iterable());
-
   /// Create an [IIterable] by forwarding to [Iterable.generate].
   _IIterable.generate(int count, [E generator(int index)?])
       : this._(Iterable.generate(count, generator));
