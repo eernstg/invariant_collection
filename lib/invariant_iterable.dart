@@ -6,6 +6,12 @@
 /// built-in class [Iterable] as a type, with better type safety.
 library;
 
+// See https://github.com/dart-lang/sdk/issues/54543:
+// ignore_for_file: unused_element
+
+// Use the same style as 'iterable.dart'.
+// ignore_for_file: use_function_type_syntax_for_parameters
+
 typedef _Inv<X> = X Function(X);
 
 /// A replacement for the built-in class [Iterable] that offers improved
@@ -80,4 +86,26 @@ extension type _IIterable<E, Invariance extends _Inv<E>>._(Iterable<E> _it)
   static String iterableToFullString(Iterable iterable,
       [String leftDelimiter = '(', String rightDelimiter = ')'])
       Iterable.iterableToFullString(iterable, leftDelimiter, rightDelimiter);
+}
+
+/// Extension methods used with regular [Iterable] objects in
+/// order to concisely obtain an expression of type [IIterable],
+/// and in order to validate the invariance.
+extension IIterableExtension<T> on Iterable<T> {
+  /// Return the receiver with type [IIterable].
+  IIterable<T> get iIterable => IIterable._(this);
+
+  /// Return true if and only if this [Iterable] has a run-time type that
+  /// implements `Iterable<T>`.  Another way to say the same thing (slightly
+  /// less precisely) is that the type argument of this [Iterable] is exactly
+  /// `T`, not a proper subtype of `T`.
+  bool get isInvariant {
+    var list = take(0).toList();
+    try {
+      list.addAll(<T>[]);
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
 }

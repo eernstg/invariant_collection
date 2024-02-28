@@ -9,6 +9,9 @@ library;
 // See https://github.com/dart-lang/sdk/issues/54543:
 // ignore_for_file: unused_element
 
+// Use the same style as 'list.dart'.
+// ignore_for_file: use_function_type_syntax_for_parameters
+
 typedef _Inv<X> = X Function(X);
 
 /// A replacement for the built-in class [List] that offers improved
@@ -60,8 +63,8 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   /// Forward to [List.cast] and return the corresponding [IList].
   IList<R> cast<R>() => IList._(_it.cast<R>());
 
-  /// TODO(eernst): Implement this when `IIterable` is created.
-  // IIterable<E> get reversed => _it.reversed.iIterable;
+  /// Forward to [Iterable.reversed].
+  IIterable<E> get reversed => _it.reversed.iIterable;
 
   /// Forward to [List.+] and return the corresponding [IList].
   IList<E> operator +(List<E> other) => IList._(_it + other);
@@ -69,9 +72,9 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   /// Forward to [List.sublist] and return the corresponding [IList].
   IList<E> sublist(int start, [int? end]) => IList._(_it.sublist(start, end));
 
-  /// TODO(eernst): Enable this when `IIterable` is created.
-  // IIterable<E> getRange(int start, int end) =>
-  //     _it.getRange(start, end).iIterable;
+  /// Forward to [Iterable.getRange].
+  IIterable<E> getRange(int start, int end) =>
+      _it.getRange(start, end).iIterable;
 
   /// TODO(eernst): Enable this when `IMap` is created.
   // IMap<int, E> asMap() => _it.asMap().iMap;
