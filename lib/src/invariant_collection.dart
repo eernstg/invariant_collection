@@ -36,42 +36,54 @@ extension type const _IIterable<E, Invariance extends _Inv<E>>._(
       IIterable._(Iterable.castFrom<S, T>(source));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.cast].
+  @redeclare
   IIterable<R> cast<R>() => IIterable._(_it.cast<R>());
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.followedBy].
+  @redeclare
   IIterable<E> followedBy(Iterable<E> other) =>
       IIterable._(_it.followedBy(other));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.map].
+  @redeclare
   IIterable<T> map<T>(T toElement(E e)) => IIterable._(_it.map<T>(toElement));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.where].
+  @redeclare
   IIterable<E> where(bool test(E element)) => IIterable._(_it.where(test));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.whereType].
+  @redeclare
   IIterable<T> whereType<T>() => IIterable._(_it.whereType<T>());
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.expand].
+  @redeclare
   IIterable<T> expand<T>(Iterable<T> toElements(E element)) =>
       IIterable._(_it.expand<T>(toElements));
 
   /// Return an [IList] obtained by forwarding to [Iterable.toList].
+  @redeclare
   IList<E> toList({bool growable = true}) => _it.toList().iList;
 
   /// Return an [ISet] created by forwarding to [Iterable.toSet].
-  // TODO: ISet<E> toSet() => _it.toSet().iSet;
+  @redeclare
+  ISet<E> toSet() => _ISet._(_it.toSet());
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.take].
+  @redeclare
   IIterable<E> take(int count) => IIterable._(_it.take(count));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.takeWhile].
+  @redeclare
   IIterable<E> takeWhile(bool test(E value)) =>
       IIterable._(_it.takeWhile(test));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.skip].
+  @redeclare
   IIterable<E> skip(int count) => IIterable._(_it.skip(count));
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.skipWhile].
+  @redeclare
   IIterable<E> skipWhile(bool test(E value)) =>
       IIterable._(_it.skipWhile(test));
 
@@ -155,18 +167,23 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
       List.writeIterable(target, at, source);
 
   /// Forward to [List.cast] and return the corresponding [IList].
+  @redeclare
   IList<R> cast<R>() => IList._(_it.cast<R>());
 
   /// Forward to [Iterable.reversed].
+  @redeclare
   IIterable<E> get reversed => _it.reversed.iIterable;
 
   /// Forward to [List.+] and return the corresponding [IList].
+  @redeclare
   IList<E> operator +(List<E> other) => IList._(_it + other);
 
   /// Forward to [List.sublist] and return the corresponding [IList].
+  @redeclare
   IList<E> sublist(int start, [int? end]) => IList._(_it.sublist(start, end));
 
   /// Forward to [Iterable.getRange].
+  @redeclare
   IIterable<E> getRange(int start, int end) =>
       _it.getRange(start, end).iIterable;
 
@@ -175,28 +192,38 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
 
   // Forwarding methods, just needed in order to disambiguate.
 
+  @redeclare
   IIterable<T> expand<T>(Iterable<T> toElements(E element)) =>
       IIterable._(_it.expand<T>(toElements));
 
+  @redeclare
   IIterable<E> followedBy(Iterable<E> other) =>
       IIterable._(_it.followedBy(other));
 
+  @redeclare
   IIterable<T> map<T>(T toElement(E e)) => IIterable._(_it.map<T>(toElement));
 
+  @redeclare
   IIterable<E> skip(int count) => IIterable._(_it.skip(count));
 
+  @redeclare
   IIterable<E> skipWhile(bool test(E value)) =>
       IIterable._(_it.skipWhile(test));
 
+  @redeclare
   IIterable<E> take(int count) => IIterable._(_it.take(count));
 
+  @redeclare
   IIterable<E> takeWhile(bool test(E value)) =>
       IIterable._(_it.takeWhile(test));
 
+  @redeclare
   IList<E> toList({bool growable = true}) => _it.toList().iList;
 
+  @redeclare
   IIterable<E> where(bool test(E element)) => IIterable._(_it.where(test));
 
+  @redeclare
   IIterable<T> whereType<T>() => IIterable._(_it.whereType<T>());
 }
 
@@ -253,6 +280,7 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
       ISet._(Set.castFrom<S, T>(source, newSet: newSet));
 
   /// Return an [ISet] obtained by forwarding to [Set.cast].
+  @redeclare
   ISet<R> cast<R>() => ISet._(_it.cast<R>());
 
   /// Removes [value] from the set by forwarding to [Set.remove].
@@ -262,6 +290,7 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
   /// because [Set] is covariant in its type parameter, but [ISet] is
   /// invariant, and this implies that `remove(o)` on an object where
   /// `o is! E` will always return false (so it isn't useful to allow it).
+  @redeclare
   bool remove(E value) => _it.remove(value);
 
   /// If an object equal to [e] is in the set, return it.
@@ -271,44 +300,59 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
   /// because [Set] is covariant in its type parameter, but [ISet] is
   /// invariant, and this implies that `lookup(o)` on an object where
   /// `o is! E` will always return null (so it isn't useful to allow it).
+  @redeclare
   E? lookup(E e) => _it.lookup(e);
 
   /// Return an [ISet] by forwarding to [Set.intersection].
+  @redeclare
   ISet<E> intersection(Set<Object?> other) => ISet._(_it.intersection(other));
 
   /// Return an [ISet] by forwarding to [Set.union].
+  @redeclare
   ISet<E> union(Set<E> other) => ISet._(_it.union(other));
 
   /// Return an [ISet] by forwarding to [Set.difference].
+  @redeclare
   ISet<E> difference(Set<Object?> other) => ISet._(_it.difference(other));
 
   /// Return an [ISet] by forwarding to [Set.toSet].
+  @redeclare
   ISet<E> toSet() => ISet._(_it.toSet());
 
   // Forwarding methods, just needed in order to disambiguate.
 
+  @redeclare
   IIterable<T> expand<T>(Iterable<T> toElements(E element)) =>
       IIterable._(_it.expand<T>(toElements));
 
+  @redeclare
   IIterable<E> followedBy(Iterable<E> other) =>
       IIterable._(_it.followedBy(other));
 
+  @redeclare
   IIterable<T> map<T>(T toElement(E e)) => IIterable._(_it.map<T>(toElement));
 
+  @redeclare
   IIterable<E> skip(int count) => IIterable._(_it.skip(count));
 
+  @redeclare
   IIterable<E> skipWhile(bool test(E value)) =>
       IIterable._(_it.skipWhile(test));
 
+  @redeclare
   IIterable<E> take(int count) => IIterable._(_it.take(count));
 
+  @redeclare
   IIterable<E> takeWhile(bool test(E value)) =>
       IIterable._(_it.takeWhile(test));
 
+  @redeclare
   IList<E> toList({bool growable = true}) => _it.toList().iList;
 
+  @redeclare
   IIterable<E> where(bool test(E element)) => IIterable._(_it.where(test));
 
+  @redeclare
   IIterable<T> whereType<T>() => IIterable._(_it.whereType<T>());
 }
 
