@@ -520,7 +520,7 @@ extension IMapExtension<K, V> on Map<K, V> {
   /// `K` and `V`, not a proper subtype thereof.
   bool get isInvariant {
     // We rely on `entries` to return an `Iterable<MapEntry<K0, V0>>`
-    // where `K0` and `V0` are the actual values of `K` respectively `V`.    
+    // where `K0` and `V0` are the actual values of `K` respectively `V`.
     var list = entries.take(0).toList();
     try {
       list.addAll(<MapEntry<K, V>>[]);
