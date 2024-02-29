@@ -132,7 +132,7 @@ extension IIterableExtension<T> on Iterable<T> {
 typedef IList<E> = _IList<E, _Inv<E>>;
 
 /// The underlying type that allows [IList] to be invariant.
-extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
+extension type const _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
     implements List<E>, _IIterable<E, Invariance> {
   /// Create an [IList] from an existing [List], and assert invariance.
   _IList(this._it) : assert(
