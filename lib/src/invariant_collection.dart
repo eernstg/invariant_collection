@@ -487,24 +487,6 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
     assert(result.isInvariant, "Covariance detected: ${result._covarianceString}");
     return result;
   }
-
-  // TODO: Not needed, I think:
-  // bool containsValue(Object? value);
-  // bool containsKey(Object? key);
-  // V? operator [](Object? key);
-  // void operator []=(K key, V value);
-  // void addEntries(Iterable<MapEntry<K, V>> newEntries);
-  // V update(K key, V update(V value), {V ifAbsent()?});
-  // void updateAll(V update(K key, V value));
-  // void removeWhere(bool test(K key, V value));
-  // V putIfAbsent(K key, V ifAbsent());
-  // void addAll(Map<K, V> other);
-  // V? remove(Object? key);
-  // void clear();
-  // void forEach(void action(K key, V value));
-  // int get length;
-  // bool get isEmpty;
-  // bool get isNotEmpty;
 }
 
 /// Extension methods used with regular [Iterable] objects in
