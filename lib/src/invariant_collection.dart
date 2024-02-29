@@ -135,8 +135,11 @@ typedef IList<E> = _IList<E, _Inv<E>>;
 extension type const _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
     implements List<E>, _IIterable<E, Invariance> {
   /// Create an [IList] from an existing [List], and assert invariance.
-  _IList(this._it) : assert(
-      _it.isInvariant, "Covariance detected: ${_it._covarianceString}");
+  _IList(this._it)
+      : assert(
+          _it.isInvariant,
+          "Covariance detected: ${_it._covarianceString}",
+        );
 
   /// Create an [IList] by forwarding to [List.filled].
   _IList.filled(int length, E fill, {bool growable = false})
@@ -473,7 +476,10 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
   @redeclare
   IIterable<K> get keys {
     var result = _it.keys;
-    assert(result.isInvariant, "Covariance detected: ${result._covarianceString}");
+    assert(
+      result.isInvariant,
+      "Covariance detected: ${result._covarianceString}",
+    );
     return IIterable<K>._(result);
   }
 
@@ -484,7 +490,10 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
   @redeclare
   IIterable<V> get values {
     var result = IIterable<V>._(_it.values);
-    assert(result.isInvariant, "Covariance detected: ${result._covarianceString}");
+    assert(
+      result.isInvariant,
+      "Covariance detected: ${result._covarianceString}",
+    );
     return result;
   }
 }
