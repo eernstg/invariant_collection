@@ -104,11 +104,12 @@ extension type const _IIterable<E, Invariance extends _Inv<E>>._(
 /// order to concisely obtain an expression of type [IIterable],
 /// and in order to validate the invariance.
 extension IIterableExtension<T> on Iterable<T> {
+  String get _covarianceString => 'expected Iterable<$T>, got $runtimeType';
+
   /// Return the receiver with type [IIterable].
   IIterable<T> get iIterable {
-    var result = IIterable<T>._(this);
-    assert(result.isInvariant);
-    return result;
+    assert(isInvariant, "Covariance detected: $_covarianceString");
+    return IIterable<T>._(this);
   }
 
   /// Return true if and only if this [Iterable] has a run-time type that
@@ -134,7 +135,8 @@ typedef IList<E> = _IList<E, _Inv<E>>;
 extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
     implements List<E>, _IIterable<E, Invariance> {
   /// Create an [IList] from an existing [List], and assert invariance.
-  _IList(this._it) : assert(_it.isInvariant, "Covariance detected!");
+  _IList(this._it) : assert(
+      _it.isInvariant, "Covariance detected: ${_it._covarianceString}");
 
   /// Create an [IList] by forwarding to [List.filled].
   _IList.filled(int length, E fill, {bool growable = false})
@@ -241,11 +243,12 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
 /// in order to concisely obtain an expression of type [IList],
 /// and in order to validate the invariance.
 extension IListExtension<T> on List<T> {
+  String get _covarianceString => 'expected List<$T>, got $runtimeType';
+
   /// Return the receiver with type [IList].
   IList<T> get iList {
-    var result = IList<T>._(this);
-    assert(result.isInvariant);
-    return result;
+    assert(isInvariant, "Covariance detected: $_covarianceString");
+    return IList<T>._(this);
   }
 
   /// Return true if and only if this [List] has a run-time type that
@@ -374,11 +377,12 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
 /// in order to concisely obtain an expression of type [ISet],
 /// and in order to validate the invariance.
 extension ISetExtension<T> on Set<T> {
+  String get _covarianceString => 'expected Set<$T>, got $runtimeType';
+
   /// Return the receiver with type [ISet].
   ISet<T> get iSet {
-    var result = ISet<T>._(this);
-    assert(result.isInvariant);
-    return result;
+    assert(isInvariant, "Covariance detected: $_covarianceString");
+    return ISet<T>._(this);
   }
 
   /// Return true if and only if this [List] has a run-time type that
@@ -468,9 +472,9 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
   /// invariantly (there is no guarantee for that).
   @redeclare
   IIterable<K> get keys {
-    var result = IIterable<K>._(_it.keys);
-    assert(result.isInvariant);
-    return result;
+    var result = _it.keys;
+    assert(result.isInvariant, "Covariance detected: ${result._covarianceString}");
+    return IIterable<K>._(result);
   }
 
   /// Forward to [Map.values] and return the corresponding [IIterable].
@@ -480,7 +484,7 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
   @redeclare
   IIterable<V> get values {
     var result = IIterable<V>._(_it.values);
-    assert(result.isInvariant);
+    assert(result.isInvariant, "Covariance detected: ${result._covarianceString}");
     return result;
   }
 
@@ -507,11 +511,12 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
 /// order to concisely obtain an expression of type [IIterable],
 /// and in order to validate the invariance.
 extension IMapExtension<K, V> on Map<K, V> {
+  String get _covarianceString => 'expected Map<$K, $V>, got $runtimeType';
+
   /// Return the receiver with type [IMap].
   IMap<K, V> get iMap {
-    var result = IMap<K, V>._(this);
-    assert(result.isInvariant);
-    return result;
+    assert(isInvariant, "Covariance detected: $_covarianceString");
+    return IMap<K, V>._(this);
   }
 
   /// Return true if and only if this [Map] has a run-time type that
