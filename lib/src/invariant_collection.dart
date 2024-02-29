@@ -65,11 +65,11 @@ extension type const _IIterable<E, Invariance extends _Inv<E>>._(
 
   /// Return an [IList] obtained by forwarding to [Iterable.toList].
   @redeclare
-  IList<E> toList({bool growable = true}) => _it.toList().iList;
+  IList<E> toList({bool growable = true}) => IList._(_it.toList());
 
   /// Return an [ISet] created by forwarding to [Iterable.toSet].
   @redeclare
-  ISet<E> toSet() => _ISet._(_it.toSet());
+  ISet<E> toSet() => ISet._(_it.toSet());
 
   /// Return an [IIterable] obtained by forwarding to [Iterable.take].
   @redeclare
@@ -200,7 +200,7 @@ extension type const _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
 
   /// Forward to [Map.asMap] and return the corresponding [IMap].
   @redeclare
-  IMap<int, E> asMap() => _IMap._(_it.asMap());
+  IMap<int, E> asMap() => IMap._(_it.asMap());
 
   // Forwarding methods, just needed in order to disambiguate.
 
@@ -230,10 +230,10 @@ extension type const _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
       IIterable._(_it.takeWhile(test));
 
   @redeclare
-  IList<E> toList({bool growable = true}) => _it.toList().iList;
+  IList<E> toList({bool growable = true}) => IList._(_it.toList());
 
   @redeclare
-  ISet<E> toSet() => _ISet._(_it.toSet());
+  ISet<E> toSet() => ISet._(_it.toSet());
 
   @redeclare
   IIterable<E> where(bool test(E element)) => IIterable._(_it.where(test));
@@ -367,7 +367,7 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
       IIterable._(_it.takeWhile(test));
 
   @redeclare
-  IList<E> toList({bool growable = true}) => _it.toList().iList;
+  IList<E> toList({bool growable = true}) => IList._(_it.toList());
 
   @redeclare
   IIterable<E> where(bool test(E element)) => IIterable._(_it.where(test));
@@ -441,7 +441,7 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
       {K Function(T)? key, V Function(T)? value}) {
     K Function(dynamic)? theKey = key == null ? null : (t) => key(t as T);
     V Function(dynamic)? theValue = value == null ? null : (t) => value(t as T);
-    return _IMap._(Map.fromIterable(iterable, key: theKey, value: theValue));
+    return IMap._(Map.fromIterable(iterable, key: theKey, value: theValue));
   }
 
   /// Create an [IMap] by forwarding to [Map.fromIterables].
@@ -450,7 +450,7 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
 
   /// Obtains an [IMap] by forwarding to [Map.castFrom].
   static IMap<K2, V2> castFrom<K, V, K2, V2>(Map<K, V> source) =>
-      _IMap._(Map.castFrom<K, V, K2, V2>(source));
+      IMap._(Map.castFrom<K, V, K2, V2>(source));
 
   /// Create an [IMap] by forwarding to [Map.fromEntries].
   _IMap.fromEntries(Iterable<MapEntry<K, V>> entries)
@@ -458,16 +458,16 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
 
   /// Creates an [IMap] by forwarding to [Map.cast].
   @redeclare
-  IMap<RK, RV> cast<RK, RV>() => _IMap._(_it.cast<RK, RV>());
+  IMap<RK, RV> cast<RK, RV>() => IMap._(_it.cast<RK, RV>());
 
   /// Forward to [Map.entries] and return the corresponding [IIterable].
   @redeclare
-  IIterable<MapEntry<K, V>> get entries => _IIterable._(_it.entries);
+  IIterable<MapEntry<K, V>> get entries => IIterable._(_it.entries);
 
   /// Forward to [Map.map] and return the corresponding [IMap].
   @redeclare
   IMap<K2, V2> map<K2, V2>(MapEntry<K2, V2> convert(K key, V value)) =>
-      _IMap._(_it.map(convert));
+      IMap._(_it.map(convert));
 
   /// Forward to [Map.keys] and return the corresponding [IIterable].
   ///
@@ -498,9 +498,9 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
   }
 }
 
-/// Extension methods used with regular [Iterable] objects in
-/// order to concisely obtain an expression of type [IIterable],
-/// and in order to validate the invariance.
+/// Extension methods used with regular [Map] objects in order to
+/// concisely obtain an expression of type [IMap], and in order to
+/// validate the invariance.
 extension IMapExtension<K, V> on Map<K, V> {
   String get _covarianceString => 'expected Map<$K, $V>, got $runtimeType';
 
