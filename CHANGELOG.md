@@ -1,3 +1,8 @@
+## 1.0.10
+
+- Improve `example.dart`, add assertions about `isInvariant` to the
+  getters `iIterable`, `iList`, `iSet`, `iMap`.
+
 ## 1.0.9
 
 - Improve README.md.
