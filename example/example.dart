@@ -49,7 +49,7 @@ void main() {
   }
   try {
     Iterable<num> iterable = <int>[42];
-    var bad = iterable.iIterable; // Assertion fails if checked.    
+    var bad = iterable.iIterable; // Assertion fails if checked.
   } catch (_) {
     print('Detected bad iterable.');
   }
@@ -59,7 +59,7 @@ void main() {
   } catch (_) {
     print('Detected bad map key type.');
   }
- try {
+  try {
     Map<Object, num> map = <Object, int>{true: 42};
     var bad = map.iMap; // Assertion fails if checked.
   } catch (_) {
