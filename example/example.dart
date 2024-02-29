@@ -34,37 +34,34 @@ void main() {
 
   // When assertions are enabled, failure to satisfy the invariance
   // requirement is detected by `iIterable`, `iList`, `iSet`, `iMap`.
+  // Run as `dart --enable-asserts example/example.dart`.
   try {
     List<num> list = <int>[42];
-    var bad = list.iList; // Assertion requires invariance.
+    var bad = list.iList; // Assertion fails if checked.
   } catch (_) {
     print('Detected bad list.');
   }
-  
   try {
     Set<num> set = <int>{42};
-    var bad = set.iSet; // Assertion requires invariance.
+    var bad = set.iSet; // Assertion fails if checked.
   } catch (_) {
     print('Detected bad set.');
   }
-
   try {
     Iterable<num> iterable = <int>[42];
-    var bad = iterable.iIterable; // Assertion requires invariance.    
+    var bad = iterable.iIterable; // Assertion fails if checked.    
   } catch (_) {
     print('Detected bad iterable.');
   }
-
   try {
-    Map<Object, num> map = <String, num>{'Hello': 42.43};
-    var bad = map.iMap; // Assertion requires invariance.
+    Map<Object, num> map = <String, num>{'Hello': 0.42};
+    var bad = map.iMap; // Assertion fails if checked.
   } catch (_) {
     print('Detected bad map key type.');
   }
-
  try {
-    Map<Object, num> map = <Object, int>{'Hello': 44};
-    var bad = map.iMap; // Assertion requires invariance.
+    Map<Object, num> map = <Object, int>{true: 42};
+    var bad = map.iMap; // Assertion fails if checked.
   } catch (_) {
     print('Detected bad map value type.');
   }
