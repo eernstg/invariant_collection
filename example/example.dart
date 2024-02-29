@@ -22,10 +22,10 @@ void main() {
 
   // Use `IIterable` rather than `Iterable` to preserve invariance, e.g.,
   // if `toList` is used to obtain a list later on.
-  var iterable = set.map((n) => n.floor() + 0.5); // `IIterable<num>`.
+  var iterable = set.map<num>((n) => n.floor() + 0.5); // `IIterable<num>`.
   print(iterable); // Prints '(6.5, 7.5, 1.5, 1.5, 2.5, 3.5)'.
   var list4 = iterable.toList(); // `IList<num>`.
-  list4.add(4.5); // OK at compile time and safe at run time.
+  list4.add(4); // OK at compile time and safe at run time.
 
   // Use `IMap` rather than `Map` to prevent dynamic type errors.
   var map = <String, num>{'test': 4, 'x': 1, 'foo': 3}.iMap;
