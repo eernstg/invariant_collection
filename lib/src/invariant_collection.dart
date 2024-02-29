@@ -105,7 +105,11 @@ extension type const _IIterable<E, Invariance extends _Inv<E>>._(
 /// and in order to validate the invariance.
 extension IIterableExtension<T> on Iterable<T> {
   /// Return the receiver with type [IIterable].
-  IIterable<T> get iIterable => IIterable._(this);
+  IIterable<T> get iIterable {
+    var result = IIterable<T>._(this);
+    assert(result.isInvariant);
+    return result;
+  }
 
   /// Return true if and only if this [Iterable] has a run-time type that
   /// implements `Iterable<T>`.  Another way to say the same thing (slightly
@@ -172,9 +176,9 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   @redeclare
   IList<R> cast<R>() => IList._(_it.cast<R>());
 
-  /// Forward to [Iterable.reversed].
+  /// Forward to [Iterable.reversed] and return the corresponding [IIterable].
   @redeclare
-  IIterable<E> get reversed => _it.reversed.iIterable;
+  IIterable<E> get reversed => IIterable<E>._(_it.reversed);
 
   /// Forward to [List.+] and return the corresponding [IList].
   @redeclare
@@ -184,13 +188,14 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   @redeclare
   IList<E> sublist(int start, [int? end]) => IList._(_it.sublist(start, end));
 
-  /// Forward to [Iterable.getRange].
+  /// Forward to [Iterable.getRange] and return the corresponding [IIterable].
   @redeclare
   IIterable<E> getRange(int start, int end) =>
-      _it.getRange(start, end).iIterable;
+      IIterable<E>._(_it.getRange(start, end));
 
-  /// TODO(eernst): Enable this when `IMap` is created.
-  // IMap<int, E> asMap() => _it.asMap().iMap;
+  /// Forward to [Map.asMap] and return the corresponding [IMap].
+  @redeclare
+  IMap<int, E> asMap() => _IMap._(_it.asMap());
 
   // Forwarding methods, just needed in order to disambiguate.
 
@@ -237,7 +242,11 @@ extension type _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
 /// and in order to validate the invariance.
 extension IListExtension<T> on List<T> {
   /// Return the receiver with type [IList].
-  IList<T> get iList => IList._(this);
+  IList<T> get iList {
+    var result = IList<T>._(this);
+    assert(result.isInvariant);
+    return result;
+  }
 
   /// Return true if and only if this [List] has a run-time type that
   /// implements `List<T>`.  Another way to say the same thing (slightly
@@ -263,7 +272,7 @@ typedef ISet<E> = _ISet<E, _Inv<E>>;
 /// The underlying type that allows [ISet] to be invariant.
 extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
     implements Set<E>, _IIterable<E, Invariance> {
-  /// Create an [ISet] by forwarding to [Set].
+  /// Create an empty [ISet].
   _ISet() : this._(<E>{});
 
   /// Create an [ISet] by forwarding to [Set.identity].
@@ -366,7 +375,11 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
 /// and in order to validate the invariance.
 extension ISetExtension<T> on Set<T> {
   /// Return the receiver with type [ISet].
-  ISet<T> get iSet => ISet._(this);
+  ISet<T> get iSet {
+    var result = ISet<T>._(this);
+    assert(result.isInvariant);
+    return result;
+  }
 
   /// Return true if and only if this [List] has a run-time type that
   /// implements `List<T>`.  Another way to say the same thing (slightly
@@ -378,6 +391,139 @@ extension ISetExtension<T> on Set<T> {
     var freshList = take(0).toList();
     try {
       freshList.addAll(<T>[]);
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
+}
+
+/// A replacement for the built-in class [Map] that offers improved
+/// type safety because it is invariant in its type parameters.
+typedef IMap<K, V> = _IMap<K, V, _Inv<(K, V)>>;
+
+extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
+    Map<K, V> _it) implements Map<K, V> {
+  /// Create an empty [IMap].
+  _IMap() : this._(<K, V>{});
+
+  /// Create an [IMap] by forwarding to [Map.from].
+  _IMap.from(Map other) : this._(Map<K, V>.from(other));
+
+  /// Create an [IMap] by forwarding to [Map.of].
+  _IMap.of(Map<K, V> other) : this._(Map<K, V>.of(other));
+
+  /// Create an [IMap] by forwarding to [Map.unmodifiable].
+  _IMap.unmodifiable(Map other) : this._(Map<K, V>.unmodifiable(other));
+
+  /// Create an [IMap] by forwarding to [Map.identity].
+  _IMap.identity() : this._(Map<K, V>.identity());
+
+  /// Create an [IMap] by forwarding to [Map.fromIterable].
+  ///
+  /// The constructor [Map.fromIterable] has weak typing (e.g., the `key`
+  /// function must accept any object whatsoever). This static method has a
+  /// similar behavior and typing, but introduces one more type argument
+  /// [T], in order to enable a more precise typing. If an invocation of
+  /// [Map.fromIterable] is replaced by an invocation of `IMap.fromIterable`
+  /// then the type arguments must be adjusted (except if they are inferred)
+  /// and the body of function literals passed to [key] and [value] will
+  /// have more precise typing because the argument has type [T] rather than
+  /// `dynamic`.
+  static IMap<K, V> fromIterable<K, V, T>(Iterable<T> iterable,
+      {K Function(T)? key, V Function(T)? value}) {
+    K Function(dynamic)? theKey = key == null ? null : (t) => key(t as T);
+    V Function(dynamic)? theValue = value == null ? null : (t) => value(t as T);
+    return _IMap._(Map.fromIterable(iterable, key: theKey, value: theValue));
+  }
+
+  /// Create an [IMap] by forwarding to [Map.fromIterables].
+  _IMap.fromIterables(Iterable<K> keys, Iterable<V> values)
+      : this._(Map<K, V>.fromIterables(keys, values));
+
+  /// Obtains an [IMap] by forwarding to [Map.castFrom].
+  static IMap<K2, V2> castFrom<K, V, K2, V2>(Map<K, V> source) =>
+      _IMap._(Map.castFrom<K, V, K2, V2>(source));
+
+  /// Create an [IMap] by forwarding to [Map.fromEntries].
+  _IMap.fromEntries(Iterable<MapEntry<K, V>> entries)
+      : this._(Map<K, V>.fromEntries(entries));
+
+  /// Creates an [IMap] by forwarding to [Map.cast].
+  @redeclare
+  IMap<RK, RV> cast<RK, RV>() => _IMap._(_it.cast<RK, RV>());
+
+  /// Forward to [Map.entries] and return the corresponding [IIterable].
+  @redeclare
+  IIterable<MapEntry<K, V>> get entries => _IIterable._(_it.entries);
+
+  /// Forward to [Map.map] and return the corresponding [IMap].
+  @redeclare
+  IMap<K2, V2> map<K2, V2>(MapEntry<K2, V2> convert(K key, V value)) =>
+      _IMap._(_it.map(convert));
+
+  /// Forward to [Map.keys] and return the corresponding [IIterable].
+  ///
+  /// An assertion is made that `_it.keys` returns a result which is typed
+  /// invariantly (there is no guarantee for that).
+  @redeclare
+  IIterable<K> get keys {
+    var result = IIterable<K>._(_it.keys);
+    assert(result.isInvariant);
+    return result;
+  }
+
+  /// Forward to [Map.values] and return the corresponding [IIterable].
+  ///
+  /// An assertion is made that `_it.values` returns a result which is typed
+  /// invariantly (there is no guarantee for that).
+  @redeclare
+  IIterable<V> get values {
+    var result = IIterable<V>._(_it.values);
+    assert(result.isInvariant);
+    return result;
+  }
+
+  // TODO: Not needed, I think:
+  // bool containsValue(Object? value);
+  // bool containsKey(Object? key);
+  // V? operator [](Object? key);
+  // void operator []=(K key, V value);
+  // void addEntries(Iterable<MapEntry<K, V>> newEntries);
+  // V update(K key, V update(V value), {V ifAbsent()?});
+  // void updateAll(V update(K key, V value));
+  // void removeWhere(bool test(K key, V value));
+  // V putIfAbsent(K key, V ifAbsent());
+  // void addAll(Map<K, V> other);
+  // V? remove(Object? key);
+  // void clear();
+  // void forEach(void action(K key, V value));
+  // int get length;
+  // bool get isEmpty;
+  // bool get isNotEmpty;
+}
+
+/// Extension methods used with regular [Iterable] objects in
+/// order to concisely obtain an expression of type [IIterable],
+/// and in order to validate the invariance.
+extension IMapExtension<K, V> on Map<K, V> {
+  /// Return the receiver with type [IMap].
+  IMap<K, V> get iMap {
+    var result = IMap<K, V>._(this);
+    assert(result.isInvariant);
+    return result;
+  }
+
+  /// Return true if and only if this [Map] has a run-time type that
+  /// implements `Map<K, V>`.  Another way to say the same thing (slightly
+  /// less precisely) is that the type arguments of this [Map] are exactly
+  /// `K` and `V`, not a proper subtype thereof.
+  bool get isInvariant {
+    // We rely on `entries` to return an `Iterable<MapEntry<K0, V0>>`
+    // where `K0` and `V0` are the actual values of `K` respectively `V`.    
+    var list = entries.take(0).toList();
+    try {
+      list.addAll(<MapEntry<K, V>>[]);
     } catch (_) {
       return false;
     }

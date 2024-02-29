@@ -1,9 +1,9 @@
 # Invariant Collections
 
 The repository `invariant_collection` provides the libraries
-`invariant_iterable.dart`, `invariant_list.dart`, `invariant_set.dart`, 
-and `invariant_collection.dart` (exporting all the others).
-Future versions of this repository will provide similar libraries
+`invariant_iterable.dart`, `invariant_list.dart`, `invariant_set.dart`,
+`invariant_map.dart`, and `invariant_collection.dart` (exporting all the
+others). Future versions of this repository may provide similar libraries
 for other kinds of collections from 'dart:core'.
 
 `invariant_list.dart` provides an extension type `IList<E>` which is
@@ -84,7 +84,7 @@ class A {
   int next(int i) => i * 2; // Ensure evenness.
 }
 
-// This class could be declared in some other library, 
+// This class could be declared in some other library,
 // we may not know that it exists.
 class B implements A {
   int next(int i) => 13; // Destroys evenness!
