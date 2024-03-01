@@ -4,6 +4,8 @@
 
 import 'package:invariant_collection/invariant_collection.dart';
 
+// ignore_for_file: unused_local_variable
+
 void main() {
   // Use `IList` rather than `List` to prevent dynamic type errors.
   var list = [1, 2, 3].iList; // Turn `List` into `IList`: Use `.iList`.
