@@ -211,7 +211,7 @@ step where an `IList<num>` is returned from `B.next`, and the value
 returned by `a.next(xs)` in `main` is assigned to `xs`. However, this
 _preserves_ the invariance, but doesn't check the invariance from scratch,
 and this means that we need to verify the invariance after the unsafe step
-in the body.
+in the body, which is the cast.
 
 An important special case arises when the invariant is never in doubt: If
 the initial state is correct (say, a variable `IList<T> x` satisfies the
@@ -223,7 +223,7 @@ assigned from sources that are known to satisfy the requirement. And so on.
 The point is that preservation of invariance is ensured for most
 computational steps, at a zero cost at run time, but it is necessary to
 keep an eye on certain steps that are unsafe. The underlying assumption for
-`invariant_collections` is that this is a worthwhile improvement over the
+`invariant_collection` is that this is a worthwhile improvement over the
 situation where every collection can be covariantly typed in all
 situations.
 
