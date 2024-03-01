@@ -1,9 +1,9 @@
 name: invariant_collection
 description: >-
   Invariant versions of standard collection types using extension types.
-  As of version 1.0.10, the kinds which are implemented are `Iterable`,
+  As of version 1.0.11, the kinds which are implemented are `Iterable`,
   `List`, `Set`, and `Map`.
-version: 1.0.10
+version: 1.0.11
 repository: https://github.com/eernstg/invariant_collection
 
 environment:
