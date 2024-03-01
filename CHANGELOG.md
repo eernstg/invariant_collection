@@ -1,3 +1,7 @@
+## 1.0.11
+
+- Improve README.md.
+
 ## 1.0.10
 
 - Improve `example.dart`, add assertions about `isInvariant` to the
