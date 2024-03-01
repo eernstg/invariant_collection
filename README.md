@@ -163,11 +163,13 @@ void main() {
 ```
 
 It is possible to perform a from-scratch check by means of
-`isInvariant`. Another way to establish a safe initial state is to use an
-`IList` constructor, e.g., `IList<num>.filled(10, 0.1)`.
+`isInvariant`. Another way to establish a safe initial state is to use any
+`IList` constructor that creates a new list, e.g.,
+`IList<num>.filled(10, 0.1)`.
 
-Note that the `IList` constructor will throw if assertions are enabled,
-because it asserts that the given list `isInvariant`.
+Note that the `IList` constructor `IList(_)` will throw if assertions
+are enabled and the actual argument has a covariant type, because it
+asserts that the given list `isInvariant`.
 
 Now let's assume that we have established the desired invariance property
 initially. Subsequent steps may then be statically known to preserve the
