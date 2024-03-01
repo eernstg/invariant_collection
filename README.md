@@ -102,7 +102,8 @@ void main() {
 
 Just like a proof by induction, we can check that the initial state
 (at the declaration and initialization of `x`) satisfies the
-requirement. Also, an inspection of `A.next(_)` confirms that `x` remains
+requirement, and then check that every subsequent step preserves the
+requirement. An inspection of `A.next(_)` confirms that `x` remains
 even, which is also true for `x += 14` and `x -= 14`.
 
 Hence, a (superficial) static analysis seems to confirm that the evenness
