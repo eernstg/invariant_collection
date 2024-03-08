@@ -33,14 +33,6 @@ extension type const _IIterable<E, Invariance extends _Inv<E>>._(
   /// is necessary because `Iterable<E>.empty()` is not constant.
   const _IIterable.empty() : this._(const Iterable<Never>.empty());
 
-  /// Create an [IIterable] by forwarding to [Iterable.castFrom].
-  static IIterable<T> castFrom<S, T>(Iterable<S> source) =>
-      IIterable._(Iterable.castFrom<S, T>(source));
-
-  /// Return an [IIterable] obtained by forwarding to [Iterable.cast].
-  @redeclare
-  IIterable<R> cast<R>() => IIterable._(_it.cast<R>());
-
   /// Return an [IIterable] obtained by forwarding to [Iterable.followedBy].
   @redeclare
   IIterable<E> followedBy(Iterable<E> other) =>
@@ -164,10 +156,6 @@ extension type const _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   /// Create an [IList] by forwarding to [List.unmodifiable].
   _IList.unmodifiable(Iterable elements) : this._(List.unmodifiable(elements));
 
-  /// Forward to [List.castFrom] and return the corresponding [IList].
-  static IList<T> castFrom<S, T>(List<S> source) =>
-      IList<T>._(List.castFrom(source));
-
   /// Forward to [List.copyRange].
   static void copyRange<T>(List<T> target, int at, List<T> source,
           [int? start, int? end]) =>
@@ -176,10 +164,6 @@ extension type const _IList<E, Invariance extends _Inv<E>>._(List<E> _it)
   /// Forward to [List.writeIterable].
   static void writeIterable<T>(List<T> target, int at, Iterable<T> source) =>
       List.writeIterable(target, at, source);
-
-  /// Forward to [List.cast] and return the corresponding [IList].
-  @redeclare
-  IList<R> cast<R>() => IList._(_it.cast<R>());
 
   /// Forward to [Iterable.reversed] and return the corresponding [IIterable].
   @redeclare
@@ -293,15 +277,6 @@ extension type const _ISet<E, Invariance extends _Inv<E>>._(Set<E> _it)
   /// Create an [ISet] by forwarding to [Set.unmodifiable].
   _ISet.unmodifiable(IIterable<E> elements)
       : this._(Set<E>.unmodifiable(elements));
-
-  /// Return an [ISet] obtained by forwarding to [Set.castFrom].
-  static ISet<T> castFrom<S, T>(Set<S> source,
-          {Set<R> Function<R>()? newSet}) =>
-      ISet._(Set.castFrom<S, T>(source, newSet: newSet));
-
-  /// Return an [ISet] obtained by forwarding to [Set.cast].
-  @redeclare
-  ISet<R> cast<R>() => ISet._(_it.cast<R>());
 
   /// Removes [value] from the set by forwarding to [Set.remove].
   ///
@@ -448,17 +423,9 @@ extension type const _IMap<K, V, Invariance extends _Inv<(K, V)>>._(
   _IMap.fromIterables(Iterable<K> keys, Iterable<V> values)
       : this._(Map<K, V>.fromIterables(keys, values));
 
-  /// Obtains an [IMap] by forwarding to [Map.castFrom].
-  static IMap<K2, V2> castFrom<K, V, K2, V2>(Map<K, V> source) =>
-      IMap._(Map.castFrom<K, V, K2, V2>(source));
-
   /// Create an [IMap] by forwarding to [Map.fromEntries].
   _IMap.fromEntries(Iterable<MapEntry<K, V>> entries)
       : this._(Map<K, V>.fromEntries(entries));
-
-  /// Creates an [IMap] by forwarding to [Map.cast].
-  @redeclare
-  IMap<RK, RV> cast<RK, RV>() => IMap._(_it.cast<RK, RV>());
 
   /// Forward to [Map.entries] and return the corresponding [IIterable].
   @redeclare
