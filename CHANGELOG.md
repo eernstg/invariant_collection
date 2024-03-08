@@ -1,3 +1,9 @@
+## 1.0.12
+
+- Remove methods that are inherently incompatible with preservation of
+  invariance (only special cases for the values of type arguments would
+  not cause the invariance property to be violated).
+
 ## 1.0.11
 
 - Improve README.md.
